@@ -39,6 +39,19 @@ deployment. Read it before changing content or layouts.
 `npx wrangler deploy`). Every other branch gets a preview (drafts included, `noindex`). A weekly workflow opens a
 pull request when a new Hugo release is out.
 
+```mermaid
+flowchart LR
+    A["Branch + commit<br/>(never on main)"] -->|push branch, open PR| B["Pull request<br/>base: main"]
+    B -->|PR starts a build| C["Cloudflare preview build<br/>&lt;branch&gt;-f-eld-ch.f-eld.workers.dev<br/>drafts included, noindex"]
+    C -->|preview URL| D{"Review the preview"}
+    D -->|changes needed: push again| A
+    D -->|looks good| E["Merge to main"]
+    E -->|push to main starts a build| F["Cloudflare build + deploy<br/>cloudflare-build.sh, wrangler deploy"]
+    F --> G(["https://f-eld.ch"])
+```
+
+Only a merge into `main` changes the live site.
+
 ## Contributing
 
 Work on a branch and open a pull request; do not push to `main`. Titles follow
